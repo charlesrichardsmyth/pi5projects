@@ -1,0 +1,1 @@
+sudo rsync -uvP /opt/npm/ -e "ssh -i /home/boots/.ssh/id_rsa" zgypi2sa@10.1.12.3:/mnt/fs1zfs1/zgy_xyz/piumverate/001/npm/dev

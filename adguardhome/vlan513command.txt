@@ -1,0 +1,5 @@
+ docker network create -d ipvlan \
+    --subnet=10.2.1.0/24 \
+    --gateway=10.2.1.1 \
+    -o parent=eth0.513 \
+    -o ipvlan_mode=l2 ipvlan513

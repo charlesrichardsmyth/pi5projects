@@ -1,0 +1,15 @@
+services:
+    adguardhome:
+      container_name: agh1
+      restart: unless-stopped
+      image: adguard/adguardhome
+      networks:
+        ipvlan513:
+          ipv4_address: 10.2.1.2
+      volumes:
+          - /opt/adguardhome/work:/opt/adguardhome/work
+          - /opt/piumverate/agh/dev:/opt/adguardhome/conf
+
+networks:
+  ipvlan513:
+    external: true

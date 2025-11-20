@@ -1,0 +1,5 @@
+services:
+    minimal-notebook:
+        ports:
+            - 8888:8888
+        image: jupyter/minimal-notebook:latest

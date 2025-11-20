@@ -1,0 +1,19 @@
+services:
+  npm:
+    container_name: rproxy
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - /opt/npm/data:/data
+      - /opt/npm/letsencrypt:/etc/letsencrypt
+      - /opt/piumverate/npm/dev/data:/data
+      - /opt/piumverate/npm/dev/letsencrypt:/etc/letsencrypt
+    networks:
+      - web
+networks:
+  web:
+    external: true

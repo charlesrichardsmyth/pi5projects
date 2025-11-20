@@ -1,0 +1,42 @@
+services:
+
+  adguardhome:
+    container_name: rdns
+    restart: unless-stopped
+    image: adguard/adguardhome
+    network_mode: host
+    volumes:
+      - /opt/piumverate/agh/dev/conf:/opt/adguardhome/conf
+      - /opt/agh/work:/opt/adguardhome/work
+
+  npm:
+    container_name: rproxy
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - /opt/piumverate/npm/dev/data:/data
+      - /opt/piumverate/npm/dev/letsencrypt:/etc/letsencrypt
+    networks:
+      - web
+
+  nginx:
+    container_name: loadbalancer
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '8000:8000'
+      - '8006:8006'
+    volumes:
+      - /opt/piumverate/nginx/dev/nginx.conf:/etc/nginx/dev/nginx.conf:ro
+      - /opt/piumverate/nginx/dev/default.conf:/etc/nginx/dev/conf.d/default.conf:ro
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
