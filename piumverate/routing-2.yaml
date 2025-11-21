@@ -1,0 +1,48 @@
+services:
+  adguardhome:
+    container_name: rdns2
+    restart: unless-stopped
+    image: adguard/adguardhome
+    network_mode: host
+    volumes:
+      - /opt/agh/002/conf:/opt/adguardhome/conf
+      - /opt/agh/002/work:/opt/adguardhome/work
+
+  npm:
+    container_name: rproxy2
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81' 
+      - '443:443'
+    volumes:
+      - /opt/npm/002/data:/data
+      - /opt/npm/002/letsencrypt:/etc/letsencrypt
+    networks:
+      ipvlan513:
+        ipv4_address: 10.2.1.4
+      web:
+
+
+  nginx:
+    container_name: loadbalancer2
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '8000:8000'
+      - '8006:8006'
+    volumes:
+      - /opt/nginx/002/nginx.conf:/etc/nginx/dev/nginx.conf:ro
+      - /opt/nginx/002/default.conf:/etc/nginx/dev/conf.d/default.conf:ro
+    networks:
+      ipvlan513:
+        ipv4_address: 10.2.1.5
+      web:
+
+networks:
+  ipvlan513:
+    external: true
+  web:
+    external: true

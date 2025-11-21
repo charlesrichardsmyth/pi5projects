@@ -1,0 +1,52 @@
+services:
+  adguardhome:
+    container_name: rdns513
+    restart: unless-stopped
+    image: adguard/adguardhome
+    networks:
+      ipvlan513:
+        ipv4_address: 10.2.1.2
+      web513:
+
+    volumes:
+      - /opt/agh/002/conf:/opt/adguardhome/conf
+      - /opt/agh/002/work:/opt/adguardhome/work
+
+  npm:
+    container_name: rproxy513
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81' 
+      - '443:443'
+    volumes:
+      - /opt/npm/002/data:/data
+      - /opt/npm/002/letsencrypt:/etc/letsencrypt
+    networks:
+      ipvlan513:
+        ipv4_address: 10.2.1.3
+      web513:
+
+
+  nginx:
+    container_name: loadbalancer513
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '8000:8000'
+      - '8006:8006'
+    volumes:
+      - /opt/nginx/002/nginx.conf:/etc/nginx/dev/nginx.conf:ro
+      - /opt/nginx/002/default.conf:/etc/nginx/dev/conf.d/default.conf:ro
+    networks:
+      ipvlan513:
+        ipv4_address: 10.2.1.4
+      web513:
+
+networks:
+  ipvlan513:
+    external: true
+  web513:
+    external: true
